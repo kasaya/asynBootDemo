@@ -1,7 +1,9 @@
 package com.oycl.demo.controller;
 
 import com.oycl.demo.AnycVo;
+import com.oycl.demo.QueueListener;
 import com.oycl.demo.RequestQueue;
+import com.oycl.demo.service.Myservice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,15 +20,22 @@ import java.util.stream.Collectors;
 @RestController
 public class SearchController {
 
+
     @Autowired
-    private RequestQueue queue;
+    Myservice myservice;
+
+    @Autowired
+    private RequestQueue<String, Object, Myservice> queue;
 
     @RequestMapping("/search")
     public DeferredResult<Object> testDeferredResult(String param) throws InterruptedException {
+        //System.out.println("线程存活数："+queueListener.getExecutor().getActiveCount());
         System.out.println(Thread.currentThread().getName()+"请求开始");
-        System.out.println(Thread.currentThread().getName()+"当前请求数："+queue.getRequesQueue().size());
+        //System.out.println(Thread.currentThread().getName()+"当前请求数："+queue.getRequesQueue().size());
         AnycVo<String, Object> vo = new AnycVo<>();
 
+        AnycVo<String, Object> vresult = new AnycVo<>();
+        vresult.setParams("time out");
         //0L 永不超时
         //DeferredResult<Object> result = new DeferredResult<>(0L);
         DeferredResult<Object> result = new DeferredResult<>((1000L*60L));
@@ -37,21 +46,13 @@ public class SearchController {
         vo.setParams(param);
         vo.setResult(result);
 
-        queue.getRequesQueue().put(vo);
+        queue.putVo(vo);
+        queue.doTask();
 
         System.out.println(Thread.currentThread().getName()+"返回请求");
 
         return result;
     }
-
-//    @ExceptionHandler
-//    @ResponseBody
-//    public String handleAsyncRequestTimeoutException(AsyncRequestTimeoutException e) {
-//        System.out.println("请求超时");
-//        return SseEmitter.event().data("timeout!!").build().stream()
-//                .map(d -> d.getData().toString())
-//                .collect(Collectors.joining());
-//    }
 
 
 

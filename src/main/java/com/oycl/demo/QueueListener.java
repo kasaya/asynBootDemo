@@ -1,24 +1,30 @@
 package com.oycl.demo;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class QueueListener {
 
-    @Autowired
-    private RquestTask rquestTask;
+    public ThreadPoolExecutor getExecutor() {
+        return executor;
+    }
 
+    private ThreadPoolExecutor executor;
     @PostConstruct
     public void init(){
-        rquestTask.start();
+        System.out.println("init() executor");
+        executor = new ThreadPoolExecutor(1, 10,3, TimeUnit.SECONDS, new SynchronousQueue<>(),new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
     @PreDestroy
     public void destory(){
-        rquestTask.setRunning(false);
+        System.out.println("shutdown");
+        executor.shutdown();
     }
 }

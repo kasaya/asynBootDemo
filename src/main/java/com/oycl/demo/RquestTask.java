@@ -16,26 +16,26 @@ public class RquestTask extends Thread {
 
     @Override
     public void run(){
-        while (running){
-            try{
-                AnycVo<String,Object> vo = queue.getRequesQueue().take();
-                //TODO:处理
-
-                String param = vo.getParams();
-                System.out.println(param+"处理开始");
-                Thread.sleep(1500);
-
-                Map<String, Object> map = new HashMap<>(10);
-                map.put("params",param);
-                map.put("time",System.currentTimeMillis());
-
-                vo.getResult().setResult(map);
-
-                System.out.println(param+"处理完成");
-            }catch (InterruptedException e){
-                running = false;
-            }
-        }
+//        while (running){
+//            try{
+//                AnycVo<String,Object> vo = queue.getRequesQueue().take();
+//                //TODO:处理
+//                System.out.println("处理线程"+ Thread.currentThread().getName());
+//                String param = vo.getParams();
+//                System.out.println(param+"处理开始");
+//                Thread.sleep(1500);
+//
+//                Map<String, Object> map = new HashMap<>(10);
+//                map.put("params",param);
+//                map.put("time",System.currentTimeMillis());
+//
+//                vo.getResult().setResult(map);
+//
+//                System.out.println(param+"处理完成");
+//            }catch (InterruptedException e){
+//                running = false;
+//            }
+//        }
     }
     public void setRunning(boolean running){
         this.running = running;
