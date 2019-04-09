@@ -4,7 +4,7 @@ import com.oycl.demo.common.async.DeferredResultFactory;
 import com.oycl.demo.common.async.TaskManager;
 import com.oycl.demo.common.async.TaskInfo;
 import com.oycl.demo.service.ExampleService;
-import com.oycl.demo.service.ExampleTask;
+import com.oycl.demo.service.task.ExampleTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

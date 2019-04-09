@@ -1,7 +1,7 @@
 package com.oycl.demo.service.impl;
 
 import com.oycl.demo.service.ExampleService;
-import com.oycl.demo.service.ExampleTask;
+import com.oycl.demo.service.task.ExampleTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

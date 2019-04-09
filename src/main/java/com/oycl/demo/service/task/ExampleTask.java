@@ -1,4 +1,4 @@
-package com.oycl.demo.service;
+package com.oycl.demo.service.task;
 
 import com.oycl.demo.common.async.RunnableService;
 import org.springframework.stereotype.Service;
