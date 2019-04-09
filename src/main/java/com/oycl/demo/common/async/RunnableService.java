@@ -7,14 +7,14 @@ public abstract class RunnableService implements Runnable{
      *
      * 请求参数
      */
-    private static final TransmittableThreadLocal<TaskInfo> ANYC_VO_THREAD_LOCAL = new TransmittableThreadLocal<>();
+    private static final TransmittableThreadLocal<TaskInfo> TASK_INFO = new TransmittableThreadLocal<>();
 
     /**
      * 取得参数
      * @return
      */
     public TaskInfo getInfo() {
-        return ANYC_VO_THREAD_LOCAL.get();
+        return TASK_INFO.get();
     }
 
     /**
@@ -22,14 +22,14 @@ public abstract class RunnableService implements Runnable{
      * @param info
      */
     public void setInfo(TaskInfo info) {
-        ANYC_VO_THREAD_LOCAL.set(info);
+        TASK_INFO.set(info);
     }
 
     /**
      *移除
      */
     public void removeInfo(){
-        ANYC_VO_THREAD_LOCAL.remove();
+        TASK_INFO.remove();
     }
 
 

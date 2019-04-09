@@ -15,11 +15,13 @@ public class DeferredResultFactory<T>  {
 
     private static final long TIME_OUT = 1000L*60L;
 
+    private static void run() {
+        System.out.println(Thread.currentThread().getName() + "请求超时");
+    }
+
     public DeferredResult<T> createResult(final Object result){
         DeferredResult<T> newItem = new DeferredResult<>(TIME_OUT,result);
-        newItem.onTimeout(()->{
-            System.out.println(Thread.currentThread().getName()+"请求超时");
-        });
+        newItem.onTimeout(DeferredResultFactory::run);
 
         return newItem;
     }

@@ -14,15 +14,11 @@ public class ExampleTask extends RunnableService {
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     @Override
     public void run() {
-        synchronized (this){
-
             Map<String, Object> map = new HashMap<>(10);
             map.put("params",this.getInfo().getParams());
             map.put("time",System.currentTimeMillis());
 
             this.getInfo().getResult().setResult(map);
             this.removeInfo();
-
-        }
     }
 }
