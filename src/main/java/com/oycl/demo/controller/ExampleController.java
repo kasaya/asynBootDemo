@@ -4,9 +4,9 @@ import com.oycl.demo.common.async.DeferredResultFactory;
 import com.oycl.demo.common.async.RunnableService;
 import com.oycl.demo.common.async.TaskManager;
 import com.oycl.demo.common.async.TaskInfo;
+import com.oycl.demo.common.base.BusinessLogic;
 import com.oycl.demo.service.ExampleService;
 import com.oycl.demo.service.task.ExampleTask;
-import com.oycl.demo.service.task.ExampleTask2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +17,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 public class ExampleController {
 
     @Autowired
-    private ExampleService service;
+    ExampleService exampleService;
 
     @Autowired
     private TaskManager<String, Object> taskManager;
@@ -35,7 +35,7 @@ public class ExampleController {
         TaskInfo<String, Object> vo = new TaskInfo<>();
         vo.setParams(param);
         vo.setResult(result);
-        vo.setService(service.task1());
+        vo.setService(new ExampleTask(info->exampleService.task1(info)));
         //放入队列
         taskManager.putTask(vo);
         //执行处理
@@ -54,7 +54,7 @@ public class ExampleController {
         TaskInfo<String, Object> vo = new TaskInfo<>();
         vo.setParams(param);
         vo.setResult(result);
-        vo.setService(service.task2());
+        vo.setService(new ExampleTask(info ->exampleService.task2(info)));
         //放入队列
         taskManager.putTask(vo);
         //执行处理

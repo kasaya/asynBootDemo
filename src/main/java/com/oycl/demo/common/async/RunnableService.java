@@ -1,8 +1,10 @@
 package com.oycl.demo.common.async;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
+import com.oycl.demo.common.base.BusinessLogic;
 
 public abstract class RunnableService implements Runnable{
+
     /**
      *
      * 请求参数
@@ -31,7 +33,6 @@ public abstract class RunnableService implements Runnable{
     public void removeInfo(){
         TASK_INFO.remove();
     }
-
 
 
 }
