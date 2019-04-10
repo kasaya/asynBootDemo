@@ -15,7 +15,7 @@ import java.util.concurrent.*;
 @Component
 public class PoolManager {
 
-    private Logger logger = LoggerFactory.getLogger(ExampleController.class);
+    private Logger logger = LoggerFactory.getLogger(PoolManager.class);
 
     private ExecutorService cachedThreadPool;
 

@@ -1,6 +1,6 @@
 package com.oycl.demo.common.async;
 
-public interface BusinessLogic {
+public interface IBusinessLogic {
 
   void doLogic(TaskInfo info);
 }
