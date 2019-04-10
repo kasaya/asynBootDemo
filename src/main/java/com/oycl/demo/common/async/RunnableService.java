@@ -35,9 +35,9 @@ public class RunnableService implements Runnable {
     /**
      * 业务逻辑载体
      */
-    private final BusinessLogic logic;
+    private final IBusinessLogic logic;
 
-    public RunnableService(BusinessLogic logic) {
+    public RunnableService(IBusinessLogic logic) {
         this.logic = logic;
     }
 
