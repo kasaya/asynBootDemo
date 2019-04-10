@@ -1,7 +1,6 @@
 package com.oycl.demo.common.async;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
-import com.oycl.demo.common.base.BusinessLogic;
 
 public class RunnableService implements Runnable {
 
