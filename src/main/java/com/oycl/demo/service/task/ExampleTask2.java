@@ -7,14 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class ExampleTask extends RunnableService {
+public class ExampleTask2 extends RunnableService {
 
     @Autowired
     MTaskMapper mTaskMapper;
@@ -26,9 +25,13 @@ public class ExampleTask extends RunnableService {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
         MTask param = new MTask();
         param.setId(uuid);
-        param.setName(Thread.currentThread().getName() + " "+  this.getInfo().getParams());
+        param.setName(this.getInfo().getParams() + " " +Thread.currentThread().getName());
         mTaskMapper.insert(param);
 
+        //模拟异常测试：
+        int i = 1;
+        int n = 0;
+        int a = i/n;
 
         Map<String, Object> map = new HashMap<>(10);
         map.put("params", this.getInfo().getParams());

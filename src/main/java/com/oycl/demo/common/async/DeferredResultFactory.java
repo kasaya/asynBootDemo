@@ -26,11 +26,13 @@ public class DeferredResultFactory<T>  {
         return newItem;
     }
     public DeferredResult<T> createResult(){
-       //TODO: 定制超时返回信息
+        //TODO: 定制超时返回信息
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("resultCode","503");
         resultMap.put("resultMsg","请求超时");
         return createResult(resultMap);
     }
+
+
 
 }

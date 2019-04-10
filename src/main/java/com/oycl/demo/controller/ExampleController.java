@@ -1,10 +1,12 @@
 package com.oycl.demo.controller;
 
 import com.oycl.demo.common.async.DeferredResultFactory;
+import com.oycl.demo.common.async.RunnableService;
 import com.oycl.demo.common.async.TaskManager;
 import com.oycl.demo.common.async.TaskInfo;
 import com.oycl.demo.service.ExampleService;
 import com.oycl.demo.service.task.ExampleTask;
+import com.oycl.demo.service.task.ExampleTask2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +20,7 @@ public class ExampleController {
     private ExampleService service;
 
     @Autowired
-    private TaskManager<String, Object, ExampleTask> taskManager;
+    private TaskManager<String, Object> taskManager;
 
     @Autowired
     private DeferredResultFactory factory;
@@ -30,7 +32,7 @@ public class ExampleController {
 
         DeferredResult<Object> result = factory.createResult();
 
-        TaskInfo<String, Object, ExampleTask> vo = new TaskInfo<>();
+        TaskInfo<String, Object> vo = new TaskInfo<>();
         vo.setParams(param);
         vo.setResult(result);
         vo.setService(service.task1());
@@ -49,7 +51,7 @@ public class ExampleController {
 
         DeferredResult<Object> result = factory.createResult();
 
-        TaskInfo<String, Object, ExampleTask> vo = new TaskInfo<>();
+        TaskInfo<String, Object> vo = new TaskInfo<>();
         vo.setParams(param);
         vo.setResult(result);
         vo.setService(service.task2());

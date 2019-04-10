@@ -1,6 +1,8 @@
 package com.oycl.demo.orm.dao;
 
 
+import com.oycl.demo.orm.model.MTask;
+
 /**
  * <p>
  * CODE定义 Mapper 接口
@@ -10,5 +12,7 @@ package com.oycl.demo.orm.dao;
  * @since 2019-01-15
  */
 public interface MTaskMapper {
+
+    void insert(MTask param);
 
 }
