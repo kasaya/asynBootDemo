@@ -1,14 +1,13 @@
 package com.oycl.demo.service.impl;
 
 import com.oycl.demo.common.async.TaskInfo;
-import com.oycl.demo.common.base.BusinessLogic;
 import com.oycl.demo.orm.dao.MTaskMapper;
 import com.oycl.demo.orm.model.MTask;
 import com.oycl.demo.service.ExampleService;
-import com.oycl.demo.service.task.ExampleTask1;
-import com.oycl.demo.service.task.ExampleTask2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +19,7 @@ public class ExampleServiceImpl implements ExampleService {
     @Autowired
     MTaskMapper mTaskMapper;
 
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
     public void task1(TaskInfo info) {
         //事务提交测试：
@@ -37,6 +37,7 @@ public class ExampleServiceImpl implements ExampleService {
         info.getResult().setResult(map);
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     @Override
     public void task2(TaskInfo info) {
         //事务提交测试：

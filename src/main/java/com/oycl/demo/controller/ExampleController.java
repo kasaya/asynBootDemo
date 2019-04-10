@@ -2,11 +2,9 @@ package com.oycl.demo.controller;
 
 import com.oycl.demo.common.async.DeferredResultFactory;
 import com.oycl.demo.common.async.RunnableService;
-import com.oycl.demo.common.async.TaskManager;
 import com.oycl.demo.common.async.TaskInfo;
-import com.oycl.demo.common.base.BusinessLogic;
+import com.oycl.demo.common.async.TaskManager;
 import com.oycl.demo.service.ExampleService;
-import com.oycl.demo.service.task.ExampleTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +33,7 @@ public class ExampleController {
         TaskInfo<String, Object> vo = new TaskInfo<>();
         vo.setParams(param);
         vo.setResult(result);
-        vo.setService(new ExampleTask(info->exampleService.task1(info)));
+        vo.setService(new RunnableService(info->{exampleService.task1(info);exampleService.task2(info);}));
         //放入队列
         taskManager.putTask(vo);
         //执行处理
@@ -54,7 +52,7 @@ public class ExampleController {
         TaskInfo<String, Object> vo = new TaskInfo<>();
         vo.setParams(param);
         vo.setResult(result);
-        vo.setService(new ExampleTask(info ->exampleService.task2(info)));
+        vo.setService(new RunnableService(info ->{exampleService.task2(info); exampleService.task1(info);}));
         //放入队列
         taskManager.putTask(vo);
         //执行处理

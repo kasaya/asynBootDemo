@@ -3,16 +3,16 @@ package com.oycl.demo.common.async;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.oycl.demo.common.base.BusinessLogic;
 
-public abstract class RunnableService implements Runnable{
+public class RunnableService implements Runnable {
 
     /**
-     *
      * 请求参数
      */
     private static final TransmittableThreadLocal<TaskInfo> TASK_INFO = new TransmittableThreadLocal<>();
 
     /**
      * 取得参数
+     *
      * @return
      */
     public TaskInfo getInfo() {
@@ -21,6 +21,7 @@ public abstract class RunnableService implements Runnable{
 
     /**
      * 设置
+     *
      * @param info
      */
     public void setInfo(TaskInfo info) {
@@ -28,10 +29,26 @@ public abstract class RunnableService implements Runnable{
     }
 
     /**
-     *移除
+     * 移除
      */
-    public void removeInfo(){
-        TASK_INFO.remove();
+    public void removeInfo() {TASK_INFO.remove();}
+
+    /**
+     * 业务逻辑载体
+     */
+    private final BusinessLogic logic;
+
+    public RunnableService(BusinessLogic logic) {
+        this.logic = logic;
+    }
+
+    /**
+     * 执行任务
+     */
+    @Override
+    public void run() {
+        logic.doLogic(this.getInfo());
+        this.removeInfo();
     }
 
 
