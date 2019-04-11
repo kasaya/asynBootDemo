@@ -1,31 +1,29 @@
 package com.oycl.demo.common.async;
 
-import com.alibaba.ttl.TtlCallable;
 import com.alibaba.ttl.TtlRunnable;
-import com.oycl.demo.controller.ExampleController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.async.DeferredResult;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
- * 请求队列
+ * 并发任务执行管理器
+ *
+ * @author oycl
  */
 @Component
-public class TaskManager<In, Out> {
+public class TaskManager {
 
-    private Logger logger = LoggerFactory.getLogger(ExampleController.class);
+    private Logger logger = LoggerFactory.getLogger(TaskManager.class);
     /**
-     * 请求队列 缓冲容量50
+     * 请求队列 缓冲容量100
      */
-    private static final int QEQUE_SIZE = 50;
+    private static final int QEQUE_SIZE = 100;
 
-    private BlockingDeque<TaskInfo<In,Out>> requesQueue = new LinkedBlockingDeque<>(QEQUE_SIZE);
+    private BlockingDeque<TaskInfo> requesQueue = new LinkedBlockingDeque<>(QEQUE_SIZE);
 
     @Autowired
     private PoolManager poolManager;
@@ -33,36 +31,26 @@ public class TaskManager<In, Out> {
     /**
      * 执行任务
      */
-    public void doTask(){
+    public void doTask() {
         try {
-            logger.info("执行 请求队列 开始");
-            TaskInfo<In, Out> vo = requesQueue.take();
-            RunnableService service =  vo.getService();
+            //logger.info("执行 请求队列 开始");
+            TaskInfo vo = requesQueue.take();
+            RunnableService service = vo.getService();
             service.setInfo(vo);
-            Future future = poolManager.getExecutor().submit(TtlRunnable.get(service));
-            try {
-                //捕捉执行异常
-                future.get();
-            } catch (ExecutionException e) {
-                DeferredResult<Out>  outDeferredResult = vo.getResult();
-                Map<String, String> resultMap = new HashMap<>();
-                resultMap.put("resultCode","204");
-                resultMap.put("resultMsg","任务失败");
-                outDeferredResult.setErrorResult(resultMap);
-                logger.info("任务失败",e);
-            }
-            logger.info("执行 请求队列 结束");
+            poolManager.getExecutor().execute(TtlRunnable.get(service));
+            //logger.info("执行 请求队列 结束");
         } catch (InterruptedException e) {
-            logger.error("requesQueue参数获取失败",e);
+            logger.error("requesQueue参数获取失败", e);
         }
     }
 
     /**
      * 将需要执行的对象放入任务队列
+     *
      * @param vo 任务对象
      * @throws InterruptedException
      */
-    public void putTask(TaskInfo<In,Out> vo) throws InterruptedException {
+    public void putTask(TaskInfo vo) throws InterruptedException {
         this.requesQueue.put(vo);
     }
 }

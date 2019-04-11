@@ -1,8 +1,9 @@
 package com.oycl.demo.common.async;
 
-import com.oycl.demo.controller.ExampleController;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -11,9 +12,17 @@ import java.util.concurrent.*;
 
 /**
  * 线程池管理
+ *
+ * @author oycl
  */
 @Component
 public class PoolManager {
+
+    private static final int  CORE_POOL_SIZE = 1;
+
+    private static final long KEEP_LIVE_TIME = 60;
+
+    private static final int MAX_POOL_SIZE = 500;
 
     private Logger logger = LoggerFactory.getLogger(PoolManager.class);
 
@@ -24,14 +33,20 @@ public class PoolManager {
     }
 
     @PostConstruct
-    public void init(){
+    public void init() {
         logger.info("init executor");
-        cachedThreadPool = Executors.newCachedThreadPool();
 
+        ThreadFactory threadFactory = new ThreadFactoryBuilder()
+                .setNameFormat("service-pool-%d")
+                .build();
+
+        cachedThreadPool = new ThreadPoolExecutor(CORE_POOL_SIZE, MAX_POOL_SIZE,
+                KEEP_LIVE_TIME, TimeUnit.SECONDS,
+                new SynchronousQueue<>(), threadFactory,new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
     @PreDestroy
-    public void destory(){
+    public void destory() {
         logger.info("shutdown executor");
         cachedThreadPool.shutdown();
     }

@@ -9,6 +9,8 @@ import java.util.Map;
 /**
  * 统一生成 DeferredResult（工厂类）
  * @param <T> 返回值实体类型
+ *
+ * @author oycl
  */
 @Component
 public class DeferredResultFactory<T>  {
@@ -19,12 +21,13 @@ public class DeferredResultFactory<T>  {
         System.out.println(Thread.currentThread().getName() + "请求超时");
     }
 
-    public DeferredResult<T> createResult(final Object result){
+    private DeferredResult<T> createResult(final Object result){
         DeferredResult<T> newItem = new DeferredResult<>(TIME_OUT,result);
         newItem.onTimeout(DeferredResultFactory::run);
 
         return newItem;
     }
+
     public DeferredResult<T> createResult(){
         //TODO: 定制超时返回信息
         Map<String, String> resultMap = new HashMap<>();

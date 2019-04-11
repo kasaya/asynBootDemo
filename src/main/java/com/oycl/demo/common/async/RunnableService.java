@@ -2,6 +2,12 @@ package com.oycl.demo.common.async;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 
+/**
+ * 实现runnable服务， 服务封装类
+ * 由此封装的 service方法可以在异步线程中执行
+ *
+ * @author oycl
+ */
 public class RunnableService implements Runnable {
 
     /**
@@ -30,7 +36,9 @@ public class RunnableService implements Runnable {
     /**
      * 移除
      */
-    public void removeInfo() {TASK_INFO.remove();}
+    public void removeInfo() {
+        TASK_INFO.remove();
+    }
 
     /**
      * 业务逻辑载体
