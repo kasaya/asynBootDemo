@@ -16,8 +16,8 @@ import java.util.UUID;
 @Service
 public class ExampleServiceImpl implements ExampleService {
 
-//    @Autowired
-//    MTaskMapper mTaskMapper;
+    @Autowired
+    MTaskMapper mTaskMapper;
 
     //@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
@@ -28,14 +28,15 @@ public class ExampleServiceImpl implements ExampleService {
 //        param.setId(uuid);
 //        param.setName(Thread.currentThread().getName() + " "+  info.getParams());
 //        mTaskMapper.insert(param);
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        int count = mTaskMapper.select();
+//        try {
+//            Thread.sleep(1500);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         Map<String, Object> map = new HashMap<>(10);
-        map.put("params", info.getParams());
+        map.put("params", count);
         map.put("time", System.currentTimeMillis());
 
         info.getResult().setResult(map);
@@ -71,14 +72,17 @@ public class ExampleServiceImpl implements ExampleService {
 //        param.setId(uuid);
 //        param.setName(params + " " +Thread.currentThread().getName());
 //        mTaskMapper.insert(param);
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(1500);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+        int count = mTaskMapper.select();
         Map<String, Object> map = new HashMap<>(10);
-        map.put("params", params);
+        map.put("params", count);
         map.put("time", System.currentTimeMillis());
         return map;
     }
+
+
 }

@@ -22,7 +22,7 @@ public class PoolManager {
 
     private static final long KEEP_LIVE_TIME = 60;
 
-    private static final int MAX_POOL_SIZE = 1000;
+    private static final int MAX_POOL_SIZE = 50;
 
     private Logger logger = LoggerFactory.getLogger(PoolManager.class);
 

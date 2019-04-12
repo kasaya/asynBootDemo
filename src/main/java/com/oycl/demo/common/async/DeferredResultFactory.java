@@ -8,12 +8,11 @@ import java.util.Map;
 
 /**
  * 统一生成 DeferredResult（工厂类）
- * @param <T> 返回值实体类型
  *
  * @author oycl
  */
 @Component
-public class DeferredResultFactory<T>  {
+public class DeferredResultFactory {
 
     private static final long TIME_OUT = 1000L*60L;
 
@@ -21,21 +20,25 @@ public class DeferredResultFactory<T>  {
         System.out.println(Thread.currentThread().getName() + "请求超时");
     }
 
-    private DeferredResult<T> createResult(final Object result){
-        DeferredResult<T> newItem = new DeferredResult<>(TIME_OUT,result);
+    private <T> DeferredResult<T> createResult(final T result){
+        DeferredResult<T> newItem;
+        if(result != null){
+            newItem = new DeferredResult<>(TIME_OUT,result);
+        }else{
+            newItem = new DeferredResult<>(TIME_OUT);
+        }
         newItem.onTimeout(DeferredResultFactory::run);
+
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("resultCode","503");
+        resultMap.put("resultMsg","请求超时");
+        newItem.setErrorResult(resultMap);
 
         return newItem;
     }
 
-    public DeferredResult<T> createResult(){
-        //TODO: 定制超时返回信息
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("resultCode","503");
-        resultMap.put("resultMsg","请求超时");
-        return createResult(resultMap);
+    public <T> DeferredResult<T> createResult(){
+        return createResult(null);
     }
-
-
 
 }
