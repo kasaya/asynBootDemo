@@ -15,4 +15,6 @@ public interface MTaskMapper {
 
     void insert(MTask param);
 
+    int select();
+
 }

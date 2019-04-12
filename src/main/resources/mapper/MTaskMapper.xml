@@ -23,4 +23,8 @@
                    ,now())
        </insert>
 
+       <select id="select" resultType="java.lang.Integer">
+           select count(1) from m_code
+       </select>
+
 </mapper>

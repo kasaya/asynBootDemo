@@ -18,11 +18,11 @@ import java.util.concurrent.*;
 @Component
 public class PoolManager {
 
-    private static final int  CORE_POOL_SIZE = 1;
+    private static final int  CORE_POOL_SIZE = 0;
 
     private static final long KEEP_LIVE_TIME = 60;
 
-    private static final int MAX_POOL_SIZE = 500;
+    private static final int MAX_POOL_SIZE = 1000;
 
     private Logger logger = LoggerFactory.getLogger(PoolManager.class);
 
@@ -43,6 +43,7 @@ public class PoolManager {
         cachedThreadPool = new ThreadPoolExecutor(CORE_POOL_SIZE, MAX_POOL_SIZE,
                 KEEP_LIVE_TIME, TimeUnit.SECONDS,
                 new SynchronousQueue<>(), threadFactory,new ThreadPoolExecutor.CallerRunsPolicy());
+
     }
 
     @PreDestroy

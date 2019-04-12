@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * 并发任务执行管理器
@@ -21,9 +23,9 @@ public class TaskManager {
     /**
      * 请求队列 缓冲容量100
      */
-    private static final int QEQUE_SIZE = 100;
+    private static final int QEQUE_SIZE = 1000;
 
-    private BlockingDeque<TaskInfo> requesQueue = new LinkedBlockingDeque<>(QEQUE_SIZE);
+    private BlockingQueue<TaskInfo<String, Object>> requesQueue = new LinkedBlockingQueue<>(QEQUE_SIZE);
 
     @Autowired
     private PoolManager poolManager;
@@ -34,7 +36,7 @@ public class TaskManager {
     public void doTask() {
         try {
             //logger.info("执行 请求队列 开始");
-            TaskInfo vo = requesQueue.take();
+            TaskInfo<String, Object> vo = requesQueue.take();
             RunnableService service = vo.getService();
             service.setInfo(vo);
             poolManager.getExecutor().execute(TtlRunnable.get(service));
