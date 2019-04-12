@@ -1,7 +1,5 @@
 package com.oycl.demo.common.async2;
 
-import java.util.function.Consumer;
-
 public abstract class Task {
     public enum TaskType {
         /* 立刻消费. */
@@ -20,10 +18,9 @@ public abstract class Task {
      */
     public String name;
 
-    public Task(TaskType type){
+    public Task(TaskType type) {
         this.type = type;
         this.name = this.getClass().getSimpleName();
-
     }
 
 

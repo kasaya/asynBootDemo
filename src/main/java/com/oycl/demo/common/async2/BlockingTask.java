@@ -4,10 +4,16 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 public class BlockingTask extends Task {
-    /**
+
+
+
+     /**
      * 等待处理的Consumer.
      */
     private ConcurrentLinkedQueue<Consumer<Object>> cs = new ConcurrentLinkedQueue<>();
@@ -21,33 +27,36 @@ public class BlockingTask extends Task {
      */
     private AtomicInteger size = new AtomicInteger(0);
 
-    /**
-     * 线程忙？
-     */
-    public volatile boolean busy = false;
 
+    /**
+     * 默认为阻塞线程
+     */
     public BlockingTask() {
         super(TaskType.BLOCKING);
     }
+
+
+    private  CountDownLatch latch = new CountDownLatch(1);
+
 
     /**
      * 添加任务.
      */
     public void push(Consumer<Object> c) {
-        this.cs.add(c);
-        this.size.incrementAndGet();
-        //通知线程消费信息
-        synchronized (this) {
-            this.notify();
+        try {
+            //System.out.println("push 上锁");
+
+            this.cs.offer(c);
+            this.size.incrementAndGet();
+            //通知线程消费信息
+            System.out.println("目前总件数：" + cs.size() + "记录总件数：" +this.size.get());
+        }finally {
+            latch.countDown();
+            //System.out.println("push 解锁");
         }
     }
 
-    /**
-     * 线程忙?
-     */
-    public boolean isBusy() {
-        return this.busy;
-    }
+
 
     /**
      * 队列尺寸.
@@ -91,22 +100,27 @@ public class BlockingTask extends Task {
      * 抢占式消费任务
      */
     private void run() {
-        Consumer<Object> c = this.cs.poll();
-        if (c == null) {
-            synchronized (this) {
-                try {
-                    this.wait();
-                } catch (InterruptedException e) {
-                }
+        try {
+            Consumer<Object> c;
+
+            while ((c = this.cs.poll()) == null) {
+                System.out.println("消费线程 等待");
+                latch.await();
+                System.out.println("消费线程 开启");
             }
-            c = this.cs.poll();
-        }
-        if (c != null) /* 抢占式. */ {
+
             this.size.decrementAndGet();
-            this.busy = true;
+
             Misc.exeConsumer(c);
-            this.busy = false;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally {
+            if(this.size() == 0 && latch.getCount() == 0){
+                System.out.println(Thread.currentThread().getName()+ " 重置countdown" + latch.getCount());
+                latch = new CountDownLatch(1);
+            }
         }
+
     }
 
     /**

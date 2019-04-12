@@ -32,7 +32,7 @@ public class PoolManager {
         return cachedThreadPool;
     }
 
-    @PostConstruct
+    //@PostConstruct
     public void init() {
         logger.info("init executor");
 
@@ -46,7 +46,7 @@ public class PoolManager {
 
     }
 
-    @PreDestroy
+    //@PreDestroy
     public void destory() {
         logger.info("shutdown executor");
         cachedThreadPool.shutdown();

@@ -29,16 +29,15 @@ public class DeferredResultFactory {
         }
         newItem.onTimeout(DeferredResultFactory::run);
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("resultCode","503");
-        resultMap.put("resultMsg","请求超时");
-        newItem.setErrorResult(resultMap);
 
         return newItem;
     }
 
-    public <T> DeferredResult<T> createResult(){
-        return createResult(null);
+    public DeferredResult createResult(){
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("resultCode","503");
+        resultMap.put("resultMsg","请求超时");
+        return createResult(resultMap);
     }
 
 }
