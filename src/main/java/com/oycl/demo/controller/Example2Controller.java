@@ -1,9 +1,8 @@
 package com.oycl.demo.controller;
 
-import com.oycl.demo.common.async.DeferredResultFactory;
-import com.oycl.demo.common.async.TaskInfo;
-import com.oycl.demo.common.async2.BlockingTask;
+
 import com.oycl.demo.common.async2.BlockingTaskManager;
+import com.oycl.demo.common.async2.DeferredResultFactory;
 import com.oycl.demo.service.ExampleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,21 +19,15 @@ public class Example2Controller  {
     ExampleService exampleService;
 
     @Autowired
-    public BlockingTaskManager appBlocking;
+    public BlockingTaskManager blockingTaskManager;
 
-    @Autowired
-    private DeferredResultFactory factory;
 
     @RequestMapping("/Task1")
     public DeferredResult<Object> search(String param) throws InterruptedException {
 
-        final DeferredResult<Object> result = factory.createResult();
+        final DeferredResult<Object> result = DeferredResultFactory.INSTENSE.createResult();
 
-//        TaskInfo<String,Object> taskInfo = new TaskInfo();
-//        taskInfo.setResult(result);
-//        taskInfo.setParams(param);
-
-        appBlocking.future(item->{
+        blockingTaskManager.future(item->{
             result.setResult(exampleService.task3(param));
         });
         return result;

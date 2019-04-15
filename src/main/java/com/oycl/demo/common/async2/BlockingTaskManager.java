@@ -7,11 +7,11 @@ public class BlockingTaskManager extends BlockingTask {
     /**
      * 可以设置CPU*2的
      */
-    private int threadSize = 10;
+    private final static int THREAD_SIZE = 8;
 
     public BlockingTaskManager() {
         //设置线程数量
-        this.setTc(threadSize);
+        this.setTc(THREAD_SIZE);
         //启动消费线程
         this.start();
     }

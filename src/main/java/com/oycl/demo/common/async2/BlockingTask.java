@@ -8,16 +8,18 @@ import java.util.function.Consumer;
 
 public class BlockingTask extends Task {
 
-
-
      /**
      * 等待处理的Consumer.
      */
     private ConcurrentLinkedQueue<Consumer<Object>> cs = new ConcurrentLinkedQueue<>();
     /**
-     * 拥有线程的个数
+     * 拥有线程的个数(默认1个)
      */
-    private int tc = 50;
+    private int tc = 1;
+
+    private static final int  CORE_POOL_SIZE = 0;
+
+    private static final long KEEP_LIVE_TIME = 60;
 
     /**
      * cs的size
@@ -43,31 +45,12 @@ public class BlockingTask extends Task {
 
     private  CountDownLatch latch = new CountDownLatch(1);
 
-
-    /**
-     * 添加任务.
-     */
-    public void push(Consumer<Object> c) {
-        try {
-            this.cs.offer(c);
-            this.size.incrementAndGet();
-        }finally {
-            //通知线程消费信息
-            latch.countDown();
-
-        }
-    }
-
-
-
     /**
      * 队列尺寸.
      */
     public int size() {
         return this.size.get();
     }
-
-
 
     public int getTc() {
         return tc;
@@ -87,8 +70,8 @@ public class BlockingTask extends Task {
                 .build();
 
         //创建线程池
-        ExecutorService ex = new ThreadPoolExecutor(0, this.tc,
-                60L, TimeUnit.SECONDS,
+        ExecutorService ex = new ThreadPoolExecutor(CORE_POOL_SIZE, this.tc,
+                KEEP_LIVE_TIME, TimeUnit.SECONDS,
                 new SynchronousQueue<>(), threadFactory, new ThreadPoolExecutor.CallerRunsPolicy());
 
         for (int i = 0; i < tc; i++) {
@@ -112,7 +95,7 @@ public class BlockingTask extends Task {
             }
             this.size.decrementAndGet();
 
-            Misc.exeConsumer(c);
+            Execution.execute(c);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }finally {
@@ -127,6 +110,20 @@ public class BlockingTask extends Task {
     }
 
     /**
+     * 添加任务.
+     */
+    public void push(Consumer<Object> c) {
+        try {
+            this.cs.offer(c);
+            this.size.incrementAndGet();
+        }finally {
+            //通知线程消费信息
+            latch.countDown();
+
+        }
+    }
+
+    /**
      * 任务消费
      */
     public void future(Consumer<Object> c) {
@@ -135,7 +132,7 @@ public class BlockingTask extends Task {
             this.push(c);
             return;
         } else {
-            Misc.exeConsumer(c);
+            Execution.execute(c);
         }
     }
 }
