@@ -3,6 +3,7 @@ package com.oycl.demo.controller;
 import com.oycl.demo.common.async.DeferredResultFactory;
 import com.oycl.demo.common.async.TaskInfo;
 import com.oycl.demo.common.async2.BlockingTask;
+import com.oycl.demo.common.async2.BlockingTaskManager;
 import com.oycl.demo.service.ExampleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,7 @@ public class Example2Controller  {
     ExampleService exampleService;
 
     @Autowired
-    public BlockingTask appBlocking;
+    public BlockingTaskManager appBlocking;
 
     @Autowired
     private DeferredResultFactory factory;
