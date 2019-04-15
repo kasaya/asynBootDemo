@@ -7,7 +7,7 @@ public class BlockingTaskManager extends BlockingTask {
     /**
      * 可以设置CPU*2的
      */
-    private int threadSize = 50;
+    private int threadSize = 10;
 
     public BlockingTaskManager() {
         //设置线程数量

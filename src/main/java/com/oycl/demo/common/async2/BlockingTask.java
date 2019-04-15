@@ -4,9 +4,6 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 public class BlockingTask extends Task {
@@ -36,6 +33,14 @@ public class BlockingTask extends Task {
     }
 
 
+    public CountDownLatch getLatch() {
+        return latch;
+    }
+
+    public void setLatch(CountDownLatch latch) {
+        this.latch = latch;
+    }
+
     private  CountDownLatch latch = new CountDownLatch(1);
 
 
@@ -44,15 +49,12 @@ public class BlockingTask extends Task {
      */
     public void push(Consumer<Object> c) {
         try {
-            //System.out.println("push 上锁");
-
             this.cs.offer(c);
             this.size.incrementAndGet();
-            //通知线程消费信息
-            System.out.println("目前总件数：" + cs.size() + "记录总件数：" +this.size.get());
         }finally {
+            //通知线程消费信息
             latch.countDown();
-            //System.out.println("push 解锁");
+
         }
     }
 
@@ -64,6 +66,8 @@ public class BlockingTask extends Task {
     public int size() {
         return this.size.get();
     }
+
+
 
     public int getTc() {
         return tc;
@@ -77,7 +81,7 @@ public class BlockingTask extends Task {
      * 启动线程
      */
     protected void start() {
-        BlockingTask ab = this;
+        final BlockingTask blockingTask = this;
         ThreadFactory threadFactory = new ThreadFactoryBuilder()
                 .setNameFormat("service-pool-%d")
                 .build();
@@ -90,7 +94,7 @@ public class BlockingTask extends Task {
         for (int i = 0; i < tc; i++) {
             ex.execute(() -> {
                 while (true) {
-                    ab.run();
+                    blockingTask.run();
                 }
             });
         }
@@ -104,20 +108,19 @@ public class BlockingTask extends Task {
             Consumer<Object> c;
 
             while ((c = this.cs.poll()) == null) {
-                System.out.println("消费线程 等待");
                 latch.await();
-                System.out.println("消费线程 开启");
             }
-
             this.size.decrementAndGet();
 
             Misc.exeConsumer(c);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }finally {
-            if(this.size() == 0 && latch.getCount() == 0){
-                System.out.println(Thread.currentThread().getName()+ " 重置countdown" + latch.getCount());
-                latch = new CountDownLatch(1);
+            synchronized (this.getLatch()){
+                while(this.size() == 0 && this.getLatch().getCount() == 0){
+                    //重置门闩
+                    this.setLatch(new CountDownLatch(1));
+                }
             }
         }
 
