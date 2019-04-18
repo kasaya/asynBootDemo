@@ -1,9 +1,13 @@
 package com.oycl.demo.common.async2;
 
-import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Component
+import javax.annotation.PreDestroy;
+
 public class BlockingTaskManager extends BlockingTask {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(BlockingTaskManager.class);
     /**
      * 可以设置CPU*2的
      */
@@ -14,6 +18,15 @@ public class BlockingTaskManager extends BlockingTask {
         this.setTc(THREAD_SIZE);
         //启动消费线程
         this.start();
+
+        LOGGER.info("BlockingTaskManager initialized");
+
+    }
+
+    @PreDestroy
+    public void destory() {
+        LOGGER.info("BlockingTaskManager shutdown");
+        this.shutdown();
     }
 }
 

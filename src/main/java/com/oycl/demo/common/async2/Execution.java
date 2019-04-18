@@ -21,7 +21,7 @@ public class Execution {
         } catch (Exception e) {
             //TODO: 异常处理
             if (LOGGER.isWarnEnabled()) {
-                LOGGER.warn("{}", e.getMessage());
+                LOGGER.warn("{}", e);
             }
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("e: {}", e.getCause(), e.getStackTrace());

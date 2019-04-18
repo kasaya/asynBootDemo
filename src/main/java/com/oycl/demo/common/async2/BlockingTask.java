@@ -6,6 +6,11 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
+/**
+ * 说明：
+ * 思路来自 博客 ：https://www.cnblogs.com/skyice/p/10080612.html
+ * 不是由线程池去创建线程来处理，而是创建几个线程，然后抢占式的去消费任务，而过来的每次请求，都会放入到队列中。
+ */
 public class BlockingTask extends Task {
 
      /**
@@ -22,7 +27,7 @@ public class BlockingTask extends Task {
     private static final long KEEP_LIVE_TIME = 60;
 
     /**
-     * cs的size
+     * 容器大小，如果使用cs.size(),每次调用都会遍历链表，开销大
      */
     private AtomicInteger size = new AtomicInteger(0);
 
@@ -43,7 +48,10 @@ public class BlockingTask extends Task {
         this.latch = latch;
     }
 
+
     private  CountDownLatch latch = new CountDownLatch(1);
+
+    private  ExecutorService ex;
 
     /**
      * 队列尺寸.
@@ -70,7 +78,7 @@ public class BlockingTask extends Task {
                 .build();
 
         //创建线程池
-        ExecutorService ex = new ThreadPoolExecutor(CORE_POOL_SIZE, this.tc,
+        ex = new ThreadPoolExecutor(CORE_POOL_SIZE, this.tc,
                 KEEP_LIVE_TIME, TimeUnit.SECONDS,
                 new SynchronousQueue<>(), threadFactory, new ThreadPoolExecutor.CallerRunsPolicy());
 
@@ -91,22 +99,27 @@ public class BlockingTask extends Task {
             Consumer<Object> c;
 
             while ((c = this.cs.poll()) == null) {
-                latch.await();
+                System.out.println("消费等待");
+                this.getLatch().await();
+                System.out.println("消费执行");
             }
+            //-1成功后则执行处理（抢占）
             this.size.decrementAndGet();
 
             Execution.execute(c);
+
+            System.out.println("执行完毕");
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }finally {
-            synchronized (this.getLatch()){
+        } finally {
+            synchronized (this){
                 while(this.size() == 0 && this.getLatch().getCount() == 0){
                     //重置门闩
+                    System.out.println("重置门闩");
                     this.setLatch(new CountDownLatch(1));
                 }
             }
         }
-
     }
 
     /**
@@ -118,8 +131,8 @@ public class BlockingTask extends Task {
             this.size.incrementAndGet();
         }finally {
             //通知线程消费信息
-            latch.countDown();
-
+            this.getLatch().countDown();
+            System.out.println("*********开启门闩");
         }
     }
 
@@ -134,5 +147,9 @@ public class BlockingTask extends Task {
         } else {
             Execution.execute(c);
         }
+    }
+
+    protected void shutdown() {
+        ex.shutdown();
     }
 }

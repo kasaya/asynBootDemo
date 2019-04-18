@@ -11,6 +11,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import java.util.Map;
 
+
 @RequestMapping("/test2")
 @RestController
 public class Example2Controller  {
