@@ -1,6 +1,7 @@
 package com.oycl.demo.controller;
 
 
+import com.oycl.demo.common.async2.AsyncUtil;
 import com.oycl.demo.common.async2.BlockingTaskManager;
 import com.oycl.demo.common.async2.DeferredResultFactory;
 import com.oycl.demo.service.ExampleService;
@@ -19,18 +20,15 @@ public class Example2Controller  {
     @Autowired
     ExampleService exampleService;
 
-    @Autowired
-    public BlockingTaskManager blockingTaskManager;
-
 
     @RequestMapping("/Task1")
     public DeferredResult<Object> search(String param) throws InterruptedException {
 
         final DeferredResult<Object> result = DeferredResultFactory.INSTENSE.createResult();
 
-        blockingTaskManager.future(item->{
-            result.setResult(exampleService.task3(param));
-        });
+        AsyncUtil.run(item->{
+            result.setResult(exampleService.task3(item));
+        }, param);
         return result;
     }
 

@@ -14,9 +14,9 @@ public class Execution {
     /**
      * 执行Consumer并将异常化解在内部.
      */
-    public static final <T> boolean execute(Consumer<T> c) {
+    public static final <T> boolean execute(TaskInfo<T> c) {
         try {
-            c.accept(null);
+            c.getConsumer().accept(c.getParams());
             return true;
         } catch (Exception e) {
             //TODO: 异常处理

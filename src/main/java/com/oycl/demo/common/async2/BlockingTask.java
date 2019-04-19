@@ -16,7 +16,7 @@ public class BlockingTask extends Task {
      /**
      * 等待处理的Consumer.
      */
-    private ConcurrentLinkedQueue<Consumer<Object>> cs = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<TaskInfo> cs = new ConcurrentLinkedQueue<>();
     /**
      * 拥有线程的个数(默认1个)
      */
@@ -96,7 +96,7 @@ public class BlockingTask extends Task {
      */
     private void run() {
         try {
-            Consumer<Object> c;
+            TaskInfo c;
 
             while ((c = this.cs.poll()) == null) {
                 System.out.println("消费等待");
@@ -125,7 +125,7 @@ public class BlockingTask extends Task {
     /**
      * 添加任务.
      */
-    public void push(Consumer<Object> c) {
+    public void push(TaskInfo c) {
         try {
             this.cs.offer(c);
             this.size.incrementAndGet();
@@ -136,18 +136,18 @@ public class BlockingTask extends Task {
         }
     }
 
-    /**
-     * 任务消费
-     */
-    public void future(Consumer<Object> c) {
-        //阻塞
-        if (this.type.ordinal() == TaskType.BLOCKING.ordinal()) {
-            this.push(c);
-            return;
-        } else {
-            Execution.execute(c);
-        }
-    }
+//    /**
+//     * 任务消费
+//     */
+//    public void future(TaskInfo c) {
+//        //阻塞
+//        if (this.type.ordinal() == TaskType.BLOCKING.ordinal()) {
+//            this.push(c);
+//            return;
+//        } else {
+//            Execution.execute(c);
+//        }
+//    }
 
     protected void shutdown() {
         ex.shutdown();
