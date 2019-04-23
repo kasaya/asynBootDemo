@@ -11,6 +11,7 @@ import org.springframework.web.context.request.async.DeferredResult;
  * @param <O> 返回出参
  * @author oycl
  */
+@Deprecated
 @Getter
 @Setter
 public class TaskInfo<I, O> {

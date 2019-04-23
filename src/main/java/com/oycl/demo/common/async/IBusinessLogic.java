@@ -5,6 +5,7 @@ package com.oycl.demo.common.async;
  *
  * @author oycl
  */
+@Deprecated
 @FunctionalInterface
 public interface IBusinessLogic {
 

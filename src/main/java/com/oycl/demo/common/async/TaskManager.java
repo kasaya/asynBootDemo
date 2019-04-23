@@ -16,6 +16,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * @author oycl
  */
+@Deprecated
 @Component
 public class TaskManager {
 

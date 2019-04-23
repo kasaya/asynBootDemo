@@ -8,6 +8,7 @@ import com.alibaba.ttl.TransmittableThreadLocal;
  *
  * @author oycl
  */
+@Deprecated
 public class RunnableService implements Runnable {
 
     /**

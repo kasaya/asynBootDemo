@@ -15,6 +15,7 @@ import java.util.concurrent.*;
  *
  * @author oycl
  */
+@Deprecated
 @Component
 public class PoolManager {
 
@@ -32,6 +33,11 @@ public class PoolManager {
         return cachedThreadPool;
     }
 
+    /**
+     *
+     * 需要开启@PostConstruct ，但此类已废除，所以注释掉
+     *
+     */
     //@PostConstruct
     public void init() {
         logger.info("init executor");
@@ -45,7 +51,11 @@ public class PoolManager {
                 new SynchronousQueue<>(), threadFactory,new ThreadPoolExecutor.CallerRunsPolicy());
 
     }
-
+    /**
+     *
+     * 需要开启@PreDestroy ，但此类已废除，所以注释掉
+     *
+     */
     //@PreDestroy
     public void destory() {
         logger.info("shutdown executor");

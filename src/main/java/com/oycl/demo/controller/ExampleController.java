@@ -17,7 +17,7 @@ public class ExampleController extends AsyncController {
     ExampleService exampleService;
 
 
-    @RequestMapping("/Task1")
+    /*@RequestMapping("/Task1")
     public DeferredResult<Object> search(String param) throws InterruptedException {
         return doBusinessLogic(param,info->exampleService.task1(info));
     }
@@ -27,7 +27,7 @@ public class ExampleController extends AsyncController {
 
         return doBusinessLogic(param,info->exampleService.task2(info));
     }
-
+*/
     @RequestMapping("/Task3")
     public Map task3(String param){
         return exampleService.task3(param);

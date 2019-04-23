@@ -19,7 +19,7 @@ public class ExampleServiceImpl implements ExampleService {
     @Autowired
     MTaskMapper mTaskMapper;
 
-    //@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
     public void task1(TaskInfo info) {
         //事务提交测试：
@@ -42,7 +42,7 @@ public class ExampleServiceImpl implements ExampleService {
         info.getResult().setResult(map);
     }
 
-    //@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     @Override
     public void task2(TaskInfo info) {
         //事务提交测试：

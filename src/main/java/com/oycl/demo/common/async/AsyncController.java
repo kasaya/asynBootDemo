@@ -2,7 +2,7 @@ package com.oycl.demo.common.async;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.async.DeferredResult;
-
+@Deprecated
 public class AsyncController {
 
     @Autowired
