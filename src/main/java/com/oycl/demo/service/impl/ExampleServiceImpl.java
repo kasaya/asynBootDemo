@@ -1,6 +1,7 @@
 package com.oycl.demo.service.impl;
 
 import com.oycl.demo.common.async.TaskInfo;
+import com.oycl.demo.common.log.annotation.CustomLog;
 import com.oycl.demo.orm.dao.MTaskMapper;
 import com.oycl.demo.orm.model.MTask;
 import com.oycl.demo.service.ExampleService;
@@ -14,6 +15,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
+@CustomLog
 public class ExampleServiceImpl implements ExampleService {
 
     @Autowired

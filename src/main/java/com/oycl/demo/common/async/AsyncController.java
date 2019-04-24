@@ -1,8 +1,10 @@
 package com.oycl.demo.common.async;
 
+import com.oycl.demo.common.log.annotation.CustomLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.async.DeferredResult;
 @Deprecated
+@CustomLog
 public class AsyncController {
 
     @Autowired

@@ -4,7 +4,9 @@ package com.oycl.demo.controller;
 import com.oycl.demo.common.async2.AsyncUtil;
 import com.oycl.demo.common.async2.BlockingTaskManager;
 import com.oycl.demo.common.async2.DeferredResultFactory;
+import com.oycl.demo.common.log.annotation.CustomLog;
 import com.oycl.demo.service.ExampleService;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +17,7 @@ import java.util.Map;
 
 @RequestMapping("/test2")
 @RestController
+@CustomLog
 public class Example2Controller  {
 
     @Autowired
