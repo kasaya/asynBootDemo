@@ -5,8 +5,8 @@ import com.oycl.demo.common.log.annotation.EnableCustomLog;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@EnableAsyncService
-@EnableCustomLog
+//@EnableAsyncService
+//@EnableCustomLog
 @SpringBootApplication
 public class AsynbootDemoApplication {
 
